@@ -20,11 +20,32 @@ if (!sessionPassword || sessionPassword.length < 32) {
   process.exit(1);
 }
 
+const dataDir = path.join(__dirname, 'data');
+await fs.mkdir(dataDir, { recursive: true });
+
+const recordsPath = path.join(dataDir, 'records.json');
+const usersPath = path.join(dataDir, 'users.json');
+
+async function ensureJsonFile(filePath, defaultValue) {
+  try {
+    await fs.access(filePath);
+  } catch {
+    await fs.writeFile(
+      filePath,
+      JSON.stringify(defaultValue, null, 2) + '\n'
+    );
+  }
+}
+
+await ensureJsonFile(recordsPath, []);
+await ensureJsonFile(usersPath, []);
+
 const records = JSON.parse(
-  await fs.readFile(path.join(__dirname, 'data', 'records.json'), 'utf8')
+  await fs.readFile(recordsPath, 'utf8')
 );
+
 const users = JSON.parse(
-  await fs.readFile(path.join(__dirname, 'data', 'users.json'), 'utf8')
+  await fs.readFile(usersPath, 'utf8')
 );
 
 app.disable('x-powered-by');
