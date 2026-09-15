@@ -48,6 +48,26 @@ const users = JSON.parse(
   await fs.readFile(usersPath, 'utf8')
 );
 
+
+if (
+  isProd &&
+  users.length === 0 &&
+  process.env.ADMIN_USERNAME &&
+  process.env.ADMIN_PASSWORD
+) {
+  const passwordHash = await bcrypt.hash(process.env.ADMIN_PASSWORD, 12);
+
+  users.push({
+    username: process.env.ADMIN_USERNAME,
+    passwordHash,
+    role: 'admin'
+  });
+
+  await fs.writeFile(
+    usersPath,
+    JSON.stringify(users, null, 2) + '\n'
+  );
+}
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
 app.use(helmet({
