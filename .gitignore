@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.txt
+data/
+backups/
+*.xlsx
+*.xls
+*.json
+!package.json
+!package-lock.json
+*.txt
+server - Copy.mjs
+server-before-*.mjs

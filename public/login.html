@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Secure Login — Rivers State Casual Staff Database</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body class="center">
+<main class="card login-card">
+  <h1>Rivers State Casual Staff Database</h1>
+  <p class="muted">Secure authorized access</p>
+  <form method="post" action="/login" autocomplete="on">
+    <label>Username
+      <input name="username" autocomplete="username" required maxlength="80">
+    </label>
+    <label>Password
+      <input type="password" name="password" autocomplete="current-password" required maxlength="200">
+    </label>
+    <button type="submit">Login</button>
+  </form>
+  <p id="error" class="error" hidden></p>
+  <p class="small">Only authorized users should access this database.</p>
+</main>
+<script>
+const p=new URLSearchParams(location.search);
+const e=p.get('error');
+if(e){const el=document.getElementById('error');el.textContent=e;el.hidden=false;}
+</script>
+</body>
+</html>

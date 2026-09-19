@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rivers State Casual Staff Database</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <h1>Rivers State Casual Staff Database</h1>
+    <p class="muted">List dated 13th September 2026</p>
+  </div>
+  <form method="post" action="/logout"><button class="secondary" type="submit">Logout</button></form>
+</header>
+<main class="container">
+  <section class="card">
+    <h2>Search authorized records</h2>
+    <p class="muted">No staff information is displayed until you search.</p>
+    <form id="searchForm">
+      <div class="search-row">
+        <input id="q" placeholder="Search by name, LGA, phone, qualification or ministry" maxlength="100" autocomplete="off">
+        <button type="submit">Search</button>
+      </div>
+    </form>
+    <div id="status" class="status"></div>
+  </section><section class="card" id="addStaffSection">
+  <h2>Add New Staff Record</h2>
+  <p class="muted">Admin only. Enter the staff information below.</p>
+
+  <form id="addStaffForm">
+    <div class="form-grid">
+      <input id="staffName" name="name" placeholder="Full name" maxlength="150" required>
+      <input id="staffMinistry" name="ministry" placeholder="Ministry / Department" maxlength="150" required>
+      <input id="staffQualification" name="qualification" placeholder="Qualification" maxlength="100" required>
+      <input id="staffLga" name="lga" placeholder="L.G.A." maxlength="100" required>
+      <input id="staffPhone" name="phone" placeholder="Phone number" maxlength="30" required>
+    </div>
+
+    <button type="submit">Add Staff Record</button>
+  </form>
+
+  <div id="addStatus" class="status"></div>
+</section>
+<section class="card" id="excelImportSection">
+  <h2>Import Staff from Excel</h2>
+  <p class="muted">
+    Admin only. Select your Excel file to import staff records.
+  </p>
+
+  <form id="excelImportForm">
+    <input
+      type="file"
+      id="excelFile"
+      accept=".xlsx,.xls"
+      required
+    >
+
+    <button type="submit">Import Excel File</button>
+  </form>
+
+  <div id="excelStatus" class="status"></div>
+</section>
+  <section id="results" class="card" hidden>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>S/N</th><th>NAME</th><th>MINISTRY / DEPARTMENT</th><th>QUALIFICATION</th><th>L.G.A.</th><th>PHONE NO.</th></tr></thead>
+        <tbody id="body"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>
