@@ -519,35 +519,41 @@ app.put('/api/records/:id', requireLogin, async (req, res) => {
     });
   }
 });
-app.delete('/api/records/:sno', requireLogin, async (req, res) => {
+app.delete('/api/records/:id', requireLogin, async (req, res) => {
   if (req.user.role !== 'admin') {
-    return res.status(403).json({ error: 'Admin access required.' });
-  }
-
-  const sno = String(req.params.sno);
-
-  const index = records.findIndex(r => String(r.sno) === sno);
-
-  if (index === -1) {
-    return res.status(404).json({
-      error: 'Staff record not found.'
+    return res.status(403).json({
+      error: 'Admin access required.'
     });
   }
 
-  const deletedRecord = records[index];
+  const id = String(req.params.id);
 
-  records.splice(index, 1);
+  try {
+    const result = await db.query(
+      `DELETE FROM staff_records
+       WHERE id = $1
+       RETURNING id, sno, ministry, name, qualification, lga, phone, created_at`,
+      [id]
+    );
 
-  await fs.writeFile(
-    path.join(__dirname, 'data', 'records.json'),
-    JSON.stringify(records),
-    'utf8'
-  );
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        error: 'Staff record not found.'
+      });
+    }
 
-  res.json({
-    message: 'Staff record deleted successfully.',
-    record: deletedRecord
-  });
+    res.json({
+      message: 'Staff record deleted successfully.',
+      record: result.rows[0]
+    });
+
+  } catch (error) {
+    console.error('Supabase delete record error:', error);
+
+    res.status(500).json({
+      error: 'Failed to delete staff record from the database.'
+    });
+  }
 });
 app.use('/style.css', express.static(path.join(__dirname, 'public', 'style.css'), {
   maxAge: isProd ? '1h' : 0
