@@ -19,7 +19,7 @@ form.addEventListener('submit',async e=>{
     body.innerHTML='';
     for(const x of data.records){
       const tr=document.createElement('tr');
-      tr.innerHTML=`<td>${esc(x.sno)}</td><td>${esc(x.name)}</td><td>${esc(x.ministry)}</td><td>${esc(x.qualification)}</td><td>${esc(x.lga)}</td><td>${esc(x.phone)}</td><td><button class="editBtn" data-sno="${esc(x.sno)}">Edit</button> <button class="deleteBtn" data-sno="${esc(x.sno)}">Delete</button></td>`;
+      tr.innerHTML=`<td>${esc(x.sno)}</td><td>${esc(x.name)}</td><td>${esc(x.ministry)}</td><td>${esc(x.qualification)}</td><td>${esc(x.lga)}</td><td>${esc(x.phone)}</td><td><button class="editBtn" data-sno${esc(x.sno)}">Edit</button> <button class="deleteBtn" data-id="${esc(x.id)}" data-sno="${esc(x.sno)}">Delete</button></td>`;
       body.appendChild(tr);
     }
     results.hidden=false;
@@ -133,7 +133,8 @@ document.addEventListener('click', async e => {
 document.addEventListener('click', async e => {
   if (!e.target.classList.contains('deleteBtn')) return;
 
-  const sno = e.target.dataset.sno;
+  const id = e.target.dataset.id;
+const sno = e.target.dataset.sno;
 
   const confirmed = confirm(
     'Are you sure you want to delete staff record S/N ' + sno + '?'
@@ -142,7 +143,7 @@ document.addEventListener('click', async e => {
   if (!confirmed) return;
 
   try {
-    const r = await fetch('/api/records/' + encodeURIComponent(sno), {
+    const r = await fetch('/api/records/' + encodeURIComponent(id), {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json'
