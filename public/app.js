@@ -264,6 +264,8 @@ async function setupRolePermissions() {
     }
 
     const user = await r.json();
+currentUserRole = user.role;
+
 
     if (user.role !== 'admin') {
       const addSection = document.getElementById('addStaffSection');
