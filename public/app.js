@@ -1,3 +1,4 @@
+let currentUserRole = null;
 const form=document.getElementById('searchForm');
 const q=document.getElementById('q');
 const body=document.getElementById('body');
