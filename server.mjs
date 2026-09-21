@@ -59,23 +59,51 @@ const users = JSON.parse(
 
 if (
   isProd &&
-  users.length === 0 &&
   process.env.ADMIN_USERNAME &&
   process.env.ADMIN_PASSWORD
 ) {
-  const passwordHash = await bcrypt.hash(process.env.ADMIN_PASSWORD, 12);
+  const existingAdmin = users.find(
+    u => u.username.toLowerCase() === process.env.ADMIN_USERNAME.toLowerCase()
+  );
 
-  users.push({
-    username: process.env.ADMIN_USERNAME,
-    passwordHash,
-    role: 'admin'
-  });
+  if (!existingAdmin) {
+    const passwordHash = await bcrypt.hash(process.env.ADMIN_PASSWORD, 12);
 
+    users.push({
+      username: process.env.ADMIN_USERNAME,
+      passwordHash,
+      role: 'admin'
+    });
+  }
+}
+
+if (
+  isProd &&
+  process.env.VIEWER_USERNAME &&
+  process.env.VIEWER_PASSWORD
+) {
+  const existingViewer = users.find(
+    u => u.username.toLowerCase() === process.env.VIEWER_USERNAME.toLowerCase()
+  );
+
+  if (!existingViewer) {
+    const passwordHash = await bcrypt.hash(process.env.VIEWER_PASSWORD, 12);
+
+    users.push({
+      username: process.env.VIEWER_USERNAME,
+      passwordHash,
+      role: 'viewer'
+    });
+  }
+}
+
+if (isProd) {
   await fs.writeFile(
     usersPath,
     JSON.stringify(users, null, 2) + '\n'
   );
 }
+
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
 app.use(helmet({
