@@ -19,7 +19,7 @@ form.addEventListener('submit',async e=>{
     body.innerHTML='';
     for(const x of data.records){
       const tr=document.createElement('tr');
-      tr.innerHTML=`<td>${esc(x.sno)}</td><td>${esc(x.name)}</td><td>${esc(x.ministry)}</td><td>${esc(x.qualification)}</td><td>${esc(x.lga)}</td><td>${esc(x.phone)}</td><td><button class="editBtn" data-id="${esc(x.id)}" data-sno="${esc(x.sno)}">Edit</button> <button class="deleteBtn" data-id="${esc(x.id)}" data-sno="${esc(x.sno)}">Delete</button></td>`;
+      tr.innerHTML=`<td>${esc(x.sno)}</td><td>${esc(x.name)}</td><td>${esc(x.ministry)}</td><td>${esc(x.qualification)}</td><td>${esc(x.lga)}</td><td>${esc(x.phone)}</td><td>${currentUserRole === 'admin' ? `<button class="editBtn" data-id="${esc(x.id)}" data-sno="${esc(x.sno)}">Edit</button> <button class="deleteBtn" data-id="${esc(x.id)}" data-sno="${esc(x.sno)}">Delete</button>` : ''}</td>`;
       body.appendChild(tr);
     }
     results.hidden=false;
@@ -245,6 +245,8 @@ if (excelForm) {
   });
 }
 // Check the logged-in user's role
+let currentUserRole = null;
+
 async function setupRolePermissions() {
   try {
     const r = await fetch('/api/me', {
@@ -259,6 +261,7 @@ async function setupRolePermissions() {
     }
 
     const user = await r.json();
+currentUserRole = user.role;
 
     if (user.role !== 'admin') {
       const addSection = document.getElementById('addStaffSection');
